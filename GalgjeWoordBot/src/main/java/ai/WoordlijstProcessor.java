@@ -5,10 +5,12 @@
  */
 package ai;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 /**
@@ -21,20 +23,18 @@ public class WoordlijstProcessor {
     private static File woordenlijst;
 
     public WoordlijstProcessor() {
-        woordenlijst = new File("woordenlijst.txt");
+        woordenlijst = new File("dictionary.txt");
     }
     
     //tool om een korte woordenlijst te genereren, die alleen woorden heeft van min tot max aantal letters
     protected static void decreaseList(File file, int min, int max){
-        try(Scanner input = new Scanner(file); FileWriter fw = new FileWriter("woordenlijst.txt");){
+        try(Scanner input = new Scanner(file); PrintWriter fw = new PrintWriter(new BufferedWriter(new FileWriter("woordenlijst.txt")));){
             while(input.hasNextLine()){
                 String woord = input.nextLine();
                 woord = woord.trim();
                 if(woord.matches("\\w{" + min + "," + max + "}")){//als het woord bestaat uit min tot max aantal letters (exclusief letters met speciale tekens, zoals een trema)
-                    System.out.println("Woord gevonden: " + woord);
                     String newline = String.format("%n");//omdat verschillende OS'en een andere definitie hebben van een newline, dient men deze methode te gebruiken
                     fw.write(woord + newline);
-                    fw.flush();
                 }
             }
         }
@@ -45,7 +45,7 @@ public class WoordlijstProcessor {
             System.err.println("IOException: " + ex.getMessage());
         }
     }
-    //tel het aantal woorden in de woordenlijst
+  //tel het aantal woorden in de woordenlijst
     int telWoorden(){
         int aantalWoorden = 0;
         try(Scanner input = new Scanner(woordenlijst)){
